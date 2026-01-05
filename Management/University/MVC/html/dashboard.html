@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Study Abroad</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-brand">
+                    StudyAbroad
+                </a>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="sidebar-link active">Dashboard</a>
+                <a href="profile.html" class="sidebar-link">My Profile</a>
+                <a href="programs.html" class="sidebar-link">My Programs</a>
+                <a href="applications.html" class="sidebar-link">Applications</a>
+                <a href="documents.html" class="sidebar-link">Documents</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="../php/logout.php" class="sidebar-link text-red">Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Topbar -->
+            <header class="topbar">
+                <h2 style="font-size: 1.25rem; font-weight: 600;">Dashboard</h2>
+                <div class="user-profile">
+                    <span>Welcome, <b>Demo User</b></span>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-title">Total Applications</div>
+                        <div class="stat-value">12</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Pending Review</div>
+                        <div class="stat-value">3</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Approved</div>
+                        <div class="stat-value text-green">8</div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Applications</h3>
+                        <a href="#" class="btn btn-outline" style="font-size: 0.875rem; padding: 0.25rem 0.75rem;">View
+                            All</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Application ID</th>
+                                    <th>University</th>
+                                    <th>Program</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#APP-001</td>
+                                    <td>Harvard University</td>
+                                    <td>Computer Science</td>
+                                    <td><span class="badge badge-success">Approved</span></td>
+                                    <td>2023-10-15</td>
+                                </tr>
+                                <tr>
+                                    <td>#APP-002</td>
+                                    <td>Stanford</td>
+                                    <td>Data Science</td>
+                                    <td><span class="badge badge-pending">Reviewing</span></td>
+                                    <td>2023-10-20</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>
