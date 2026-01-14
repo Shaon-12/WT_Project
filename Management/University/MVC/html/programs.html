@@ -6,11 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Programs - Study Abroad</title>
     <link rel="stylesheet" href="../css/style.css">
+    <script>
+        function loadPrograms() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '../php/programs.php', true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    try {
+                        var data = JSON.parse(xhr.responseText);
+                        if (data.error) return;
+
+                        document.getElementById('display-username').textContent = data.username;
+
+                        var tbody = document.getElementById('programs-body');
+                        if (data.programs && data.programs.length > 0) {
+                            var html = '';
+                            for (var i = 0; i < data.programs.length; i++) {
+                                var prog = data.programs[i];
+                                html += '<tr>';
+                                html += '<td style="font-weight: 500;">' + prog.program_name + '</td>';
+                                html += '<td><span class="badge badge-success">' + prog.department + '</span></td>';
+                                html += '<td style="color: grey; font-size: 0.9rem;">' + prog.created_at + '</td>';
+                                html += '</tr>';
+                            }
+                            tbody.innerHTML = html;
+                        } else {
+                            document.getElementById('programs-table-container').innerHTML =
+                                '<div class="text-center" style="padding: 3rem; color: grey;">' +
+                                '<p>No programs added yet.</p>' +
+                                '</div>';
+                        }
+                    } catch (e) { }
+                }
+            };
+            xhr.send();
+        }
+        loadPrograms();
+    </script>
 </head>
 
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <a href="dashboard.html" class="sidebar-brand">StudyAbroad</a>
@@ -27,23 +64,25 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
             <header class="topbar">
-                <h2 style="font-size: 1.25rem; font-weight: 600;">Academic Programs</h2>
+                <h2>Academic Programs</h2>
                 <div class="user-profile">
-                    <span>Demo User</span>
+                    <span id="display-username">Loading...</span>
                 </div>
             </header>
 
             <div class="page-content">
+                <div id="message-container" style="display: none;" class="alert"></div>
+
                 <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
-                    <!-- Add Program Form -->
+
                     <div class="card" style="height: fit-content;">
                         <div class="card-header">
                             <h3 class="card-title">Add New Program</h3>
                         </div>
-                        <form method="post" action="">
+                        <form method="post" action="../php/programs.php">
+                            <input type="hidden" name="add_program" value="1">
                             <div class="form-group">
                                 <label class="form-label">Program Name</label>
                                 <input type="text" name="program_name" class="form-control"
@@ -60,16 +99,15 @@
                                     <option value="FE">Faculty of Engineering (FE)</option>
                                 </select>
                             </div>
-                            <button type="button" class="btn btn-primary w-full mt-4">Add Program</button>
+                            <button type="submit" class="btn btn-primary w-full mt-4">Add Program</button>
                         </form>
                     </div>
 
-                    <!-- Programs List -->
-                    <div class="card">
+
+                    <div class="card" id="programs-table-container">
                         <div class="card-header">
                             <h3 class="card-title">Current Programs</h3>
                         </div>
-
                         <div class="table-responsive">
                             <table class="table">
                                 <thead>
@@ -79,17 +117,7 @@
                                         <th>Added On</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style="font-weight: 500;">BSc in Computer Science</td>
-                                        <td><span class="badge badge-success">FST</span></td>
-                                        <td style="color: var(--text-muted); font-size: 0.9rem;">Jan 01, 2026</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="font-weight: 500;">BBA</td>
-                                        <td><span class="badge badge-success">FBA</span></td>
-                                        <td style="color: var(--text-muted); font-size: 0.9rem;">Jan 02, 2026</td>
-                                    </tr>
+                                <tbody id="programs-body">
                                 </tbody>
                             </table>
                         </div>
@@ -98,6 +126,24 @@
             </div>
         </main>
     </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        const success = urlParams.get('success');
+        const msgDiv = document.getElementById('message-container');
+
+        if (error) {
+            msgDiv.textContent = error;
+            msgDiv.className = 'alert alert-error';
+            msgDiv.style.display = 'block';
+        } else if (success) {
+            msgDiv.textContent = success;
+            msgDiv.className = 'alert alert-success';
+            msgDiv.style.display = 'block';
+            msgDiv.style.backgroundColor = '#dcfce7';
+            msgDiv.style.color = '#166534';
+        }
+    </script>
     <script src="../js/script.js"></script>
 </body>
 
