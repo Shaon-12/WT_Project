@@ -4,13 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Applications - Study Abroad</title>
+    <title>Applications</title>
     <link rel="stylesheet" href="../css/style.css">
+    <script>
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '../php/check_session.php', true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    if (!data.authenticated) {
+                        window.location.href = 'login.html';
+                    } else {
+                        document.getElementById('display-username').textContent = data.username;
+                    }
+                }
+            }
+        };
+        xhr.send();
+    </script>
 </head>
 
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
+
         <aside class="sidebar">
             <div class="sidebar-header">
                 <a href="dashboard.html" class="sidebar-brand">StudyAbroad</a>
@@ -27,22 +44,18 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
             <header class="topbar">
-                <h2 style="font-size: 1.25rem; font-weight: 600;">Student Applications</h2>
+                <h2>Student Applications</h2>
                 <div class="user-profile">
-                    <span>Demo User</span>
+                    <span id="display-username">Loading...</span>
                 </div>
             </header>
 
             <div class="page-content">
-
-                <!-- Controls -->
                 <div class="filters-container">
-                    <input type="text" id="searchInput" class="form-control" placeholder="Search by name or ID..."
-                        style="max-width: 300px;">
-                    <select id="statusFilter" class="form-control" style="max-width: 200px; background-color: white;">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+                    <select id="statusFilter" class="form-control">
                         <option value="All">All Statuses</option>
                         <option value="Pending">Pending</option>
                         <option value="Accepted">Accepted</option>
@@ -50,65 +63,22 @@
                     </select>
                 </div>
 
-                <!-- Applications Table -->
                 <div class="card mt-4">
                     <div class="table-responsive">
                         <table class="table" id="applicationsTable">
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Student Name</th>
+                                    <th>Name</th>
                                     <th>Program</th>
-                                    <th>Applied Date</th>
-                                    <th>Documents</th>
+                                    <th>Date</th>
+                                    <th>Docs</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr data-status="Pending">
-                                    <td>#101</td>
-                                    <td style="font-weight: 500;">Alice Johnson</td>
-                                    <td>BSc Computer Science</td>
-                                    <td style="color: var(--text-muted); font-size: 0.9rem;">2025-12-28</td>
-                                    <td>
-                                        <button class="btn btn-outline btn-sm view-docs-btn"
-                                            data-student="Alice Johnson"
-                                            data-docs='["Passport", "High School Transcript", "SOP"]'>
-                                            View Docs
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-pending status-badge">Pending</span>
-                                    </td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-icon text-green action-accept" title="Accept">✓</button>
-                                            <button class="btn-icon text-red action-reject" title="Reject">✕</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr data-status="Accepted">
-                                    <td>#102</td>
-                                    <td style="font-weight: 500;">Bob Smith</td>
-                                    <td>BBA</td>
-                                    <td style="color: var(--text-muted); font-size: 0.9rem;">2025-12-30</td>
-                                    <td>
-                                        <button class="btn btn-outline btn-sm view-docs-btn" data-student="Bob Smith"
-                                            data-docs='["Passport", "A-Level Certificate"]'>
-                                            View Docs
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-accepted status-badge">Accepted</span>
-                                    </td>
-                                    <td>
-                                        <div class="action-buttons">
-                                            <button class="btn-icon text-green action-accept" title="Accept">✓</button>
-                                            <button class="btn-icon text-red action-reject" title="Reject">✕</button>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tbody id="applicationsBody">
+
                             </tbody>
                         </table>
                     </div>
@@ -117,23 +87,21 @@
         </main>
     </div>
 
-    <!-- Document Modal -->
+
     <div id="docModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 class="modal-title">Documents: <span id="modalStudentName"></span></h3>
                 <span class="close-modal">&times;</span>
             </div>
-            <div class="modal-body" id="modalDocList">
-                <!-- Docs injected here -->
-            </div>
+            <div class="modal-body" id="modalDocList"></div>
             <div class="modal-footer">
-                <button class="btn btn-outline close-modal-btn">Close</button>
+                <button class="btn close-modal-btn">Close</button>
             </div>
         </div>
     </div>
 
-    <script src="../js/script.js"></script>
+    <script src="../js/script.js?v=2"></script>
 </body>
 
 </html>

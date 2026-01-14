@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,7 +23,7 @@
                 <p class="auth-subtitle">Sign in to continue your journey</p>
             </div>
 
-            <!-- Error container for JS or server-side redirects (if implemented via URL params) -->
+
             <div id="error-message" class="alert alert-error" style="display: none;"></div>
 
             <form method="post" action="../php/login.php">
@@ -47,6 +46,20 @@
         </div>
     </div>
     <script src="../js/script.js"></script>
+    <script>
+
+        function getQueryParam(param) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        var error = getQueryParam('error');
+        if (error) {
+            var errDiv = document.getElementById('error-message');
+            errDiv.textContent = error;
+            errDiv.style.display = 'block';
+        }
+    </script>
 </body>
 
 </html>
