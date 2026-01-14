@@ -1,0 +1,226 @@
+/* My School Project CSS */
+
+body {
+    background-color: white;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+.navbar {
+    background-color: lightblue;
+    padding: 10px;
+    border-bottom: 2px solid black;
+    overflow: hidden;
+}
+
+.nav-brand {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+    float: left;
+}
+
+.nav-links {
+    float: right;
+}
+
+.nav-links a {
+    margin-left: 10px;
+    color: blue;
+}
+
+/* Main Layout */
+.dashboard-container {
+    width: 100%;
+}
+
+.sidebar {
+    width: 20%;
+    float: left;
+    background-color: #f0f0f0;
+    height: 100vh;
+    border-right: 2px solid black;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.main-content {
+    width: 80%;
+    float: left;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Sidebar Links */
+.sidebar-link {
+    display: block;
+    padding: 10px;
+    border-bottom: 1px solid gray;
+    color: black;
+    text-decoration: none;
+}
+
+.sidebar-link:hover {
+    background-color: #ddd;
+}
+
+/* Forms (Login/Register) */
+.auth-container {
+    width: 100%;
+    margin-top: 50px;
+    text-align: center;
+}
+
+.auth-card {
+    width: 300px;
+    margin: 0 auto;
+    border: 2px solid black;
+    padding: 20px;
+    background-color: #ffffcc;
+    /* yellow note look */
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-label {
+    display: block;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 90%;
+    padding: 5px;
+}
+
+.btn {
+    padding: 5px 10px;
+    background-color: #ddd;
+    border: 1px solid black;
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: lightgreen;
+}
+
+.w-full {
+    width: 100%;
+}
+
+/* Tables */
+.table {
+    width: 100%;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #ccc;
+}
+
+/* Stats */
+.stats-grid {
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    float: left;
+    width: 22%;
+    margin-right: 2%;
+    border: 1px solid black;
+    padding: 10px;
+    background-color: white;
+}
+
+.stat-value {
+    font-size: 24px;
+    color: blue;
+}
+
+/* Alerts */
+.alert {
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: pink;
+}
+
+.alert-success {
+    background-color: lightgreen;
+}
+
+.text-red {
+    color: red;
+}
+
+/* Clear floats */
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/* Tabs */
+.tabs {
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.tab-btn {
+    float: left;
+    padding: 10px;
+    cursor: pointer;
+    background: #ccc;
+    border: 1px solid black;
+    margin-right: 5px;
+}
+
+.tab-btn.active {
+    background: white;
+    border-bottom: 1px solid white;
+}
+
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+}
+
+/* Topbar */
+.topbar {
+    border-bottom: 2px solid black;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.user-profile {
+    float: right;
+    font-weight: bold;
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    padding: 50px;
+    background-color: #eee;
+}
