@@ -6,11 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - Study Abroad</title>
     <link rel="stylesheet" href="../css/style.css">
+    <script>
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '../php/profile.php', true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+
+                try {
+                    var data = JSON.parse(xhr.responseText);
+                    if (data.error) {
+                        window.location.href = 'login.html';
+                    } else {
+                        document.getElementById('display-username').textContent = data.username;
+                        document.querySelector('input[name="username"]').value = data.username || '';
+                        document.querySelector('input[name="email"]').value = data.email || '';
+                        document.querySelector('input[name="university_name"]').value = data.university_name || '';
+                        document.querySelector('input[name="university_ranking"]').value = data.university_ranking || '';
+                        document.querySelector('input[name="university_country"]').value = data.university_country || '';
+                    }
+                } catch (e) {
+
+                }
+            }
+        };
+        xhr.send();
+    </script>
 </head>
 
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
                 <a href="dashboard.html" class="sidebar-brand">StudyAbroad</a>
@@ -27,12 +51,11 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-content">
             <header class="topbar">
-                <h2 style="font-size: 1.25rem; font-weight: 600;">My Profile</h2>
+                <h2>My Profile</h2>
                 <div class="user-profile">
-                    <span>Demo User</span>
+                    <span id="display-username">Loading...</span>
                 </div>
             </header>
 
@@ -43,9 +66,11 @@
                         <p class="auth-subtitle">Manage your personal and university information</p>
                     </div>
 
-                    <form method="post" action="" class="mb-4">
+                    <div id="message-container" style="display: none;" class="alert"></div>
+
+                    <form method="post" action="../php/profile.php" class="mb-4">
+                        <input type="hidden" name="update_profile" value="1">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
-                            <!-- Personal Info -->
                             <div style="grid-column: 1 / -1;">
                                 <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--primary);">Personal
                                     Information</h3>
@@ -53,14 +78,13 @@
 
                             <div class="form-group">
                                 <label class="form-label">Full Name</label>
-                                <input type="text" name="username" class="form-control" value="Demo User" required>
+                                <input type="text" name="username" class="form-control" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Email Address</label>
-                                <input type="email" name="email" class="form-control" value="demo@example.com" required>
+                                <input type="email" name="email" class="form-control" required>
                             </div>
 
-                            <!-- University Info -->
                             <div style="grid-column: 1 / -1; margin-top: 1rem;">
                                 <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: var(--primary);">University
                                     Information</h3>
@@ -69,24 +93,24 @@
                             <div class="form-group">
                                 <label class="form-label">University Name</label>
                                 <input type="text" name="university_name" class="form-control"
-                                    placeholder="e.g. Harvard University" value="Harvard University">
+                                    placeholder="e.g. Harvard University">
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Global Ranking</label>
-                                <input type="number" name="university_ranking" class="form-control" placeholder="e.g. 1"
-                                    value="1">
+                                <input type="number" name="university_ranking" class="form-control"
+                                    placeholder="e.g. 1">
                             </div>
 
                             <div class="form-group" style="grid-column: 1 / -1;">
                                 <label class="form-label">Country</label>
-                                <input type="text" name="university_country" class="form-control" placeholder="e.g. USA"
-                                    value="USA">
+                                <input type="text" name="university_country" class="form-control"
+                                    placeholder="e.g. USA">
                             </div>
                         </div>
 
                         <div style="margin-top: 2rem; display: flex; gap: 1rem; align-items: center;">
-                            <button type="button" class="btn btn-primary">Save Changes</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                             <a href="password.html" class="btn btn-outline">Change Password</a>
                         </div>
                     </form>
@@ -94,6 +118,24 @@
             </div>
         </main>
     </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        const success = urlParams.get('success');
+        const msgDiv = document.getElementById('message-container');
+
+        if (error) {
+            msgDiv.textContent = error;
+            msgDiv.className = 'alert alert-error';
+            msgDiv.style.display = 'block';
+        } else if (success) {
+            msgDiv.textContent = success;
+            msgDiv.className = 'alert alert-success';
+            msgDiv.style.display = 'block';
+            msgDiv.style.backgroundColor = '#dcfce7';
+            msgDiv.style.color = '#166534';
+        }
+    </script>
     <script src="../js/script.js"></script>
 </body>
 
