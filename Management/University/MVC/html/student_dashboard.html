@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script>
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '../php/check_session.php', true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    if (!data.authenticated || data.role !== 'student') {
+                        window.location.href = 'login.html';
+                    } else {
+                        document.getElementById('display-username').textContent = data.username;
+                    }
+                }
+            }
+        };
+        xhr.send();
+    </script>
+</head>
+
+<body>
+    <div class="dashboard-container">
+
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="student_dashboard.html" class="sidebar-brand">StudyAbroad</a>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="student_dashboard.html" class="sidebar-link active">Dashboard</a>
+                <a href="my_applications.html" class="sidebar-link">My Applications</a>
+                <a href="profile.html" class="sidebar-link">Profile</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="../php/logout.php" class="sidebar-link text-red">Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <h2>Student Overview</h2>
+                <div class="user-profile">
+                    <span id="display-username">Loading...</span>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-title">My Applications</div>
+                        <div class="stat-value">3</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Status</div>
+                        <div class="stat-value">In Progress</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">My Recent Activity</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Program</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Computer Science Exchange</td>
+                                    <td>Oct 20, 2023</td>
+                                    <td><span class="badge badge-pending">Pending</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>
