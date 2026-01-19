@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>University Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script>
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '../php/check_session.php', true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    if (!data.authenticated || data.role !== 'university') {
+                        window.location.href = 'login.html';
+                    } else {
+                        document.getElementById('display-username').textContent = data.username;
+                    }
+                }
+            }
+        };
+        xhr.send();
+    </script>
+</head>
+
+<body>
+    <div class="dashboard-container">
+
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="dashboard.html" class="sidebar-brand">StudyAbroad</a>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="sidebar-link active">Dashboard</a>
+                <a href="applications.html" class="sidebar-link">Applications</a>
+                <a href="programs.html" class="sidebar-link">Programs</a>
+                <a href="students.html" class="sidebar-link">Students</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="../php/logout.php" class="sidebar-link text-red">Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <h2>Overview</h2>
+                <div class="user-profile">
+                    <span id="display-username">Loading...</span>
+                </div>
+            </header>
+
+            <div class="page-content">
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-title">Total Applications</div>
+                        <div class="stat-value">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Pending Review</div>
+                        <div class="stat-value">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Accepted Students</div>
+                        <div class="stat-value">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Partner Universities</div>
+                        <div class="stat-value">0</div>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Applications</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Student</th>
+                                    <th>Program</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Shaon</td>
+                                    <td>Computer Science</td>
+                                    <td>Oct 24, 2023</td>
+                                    <td><span class="badge badge-pending">Pending</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Rupok</td>
+                                    <td>Computer Science</td>
+                                    <td>Oct 23, 2023</td>
+                                    <td><span class="badge badge-success">Accepted</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

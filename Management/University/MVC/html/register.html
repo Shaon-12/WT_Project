@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Study Abroad</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 0.75rem;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            color: #64748b;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <a href="../../../../index.php" class="nav-brand">StudyAbroad</a>
+        <div class="nav-links">
+            <a href="login.html" class="btn btn-outline">Login</a>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2 class="auth-title">Create Account</h2>
+                <p class="auth-subtitle">Register to get started</p>
+            </div>
+
+            <div id="message-container" class="alert" style="display: none;"></div>
+
+
+            <div class="tabs">
+                <div class="tab-btn active" onclick="switchTab('student')">Student</div>
+                <div class="tab-btn" onclick="switchTab('university')">University</div>
+            </div>
+
+
+            <div id="studentForm" class="form-section active">
+                <form method="post" action="../php/register.php">
+                    <input type="hidden" name="role" value="student">
+
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" name="confirm_password" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full mt-4">Register as Student</button>
+                </form>
+            </div>
+
+
+            <div id="universityForm" class="form-section">
+                <form method="post" action="../php/register.php">
+                    <input type="hidden" name="role" value="university">
+
+                    <div class="form-group">
+                        <label class="form-label">University Name</label>
+                        <input type="text" name="username" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Official Email</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" name="confirm_password" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-full mt-4">Register University</button>
+                </form>
+            </div>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Sign in</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(type) {
+            var btns = document.getElementsByClassName('tab-btn');
+            for (var i = 0; i < btns.length; i++) {
+                btns[i].className = btns[i].className.replace(" active", "");
+            }
+            event.currentTarget.className += " active";
+
+            var forms = document.getElementsByClassName('form-section');
+            for (var i = 0; i < forms.length; i++) {
+                forms[i].style.display = 'none';
+            }
+            document.getElementById(type + 'Form').style.display = 'block';
+        }
+
+        function getQueryParam(param) {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        var error = getQueryParam('error');
+        var success = getQueryParam('success');
+        var searchMsg = document.getElementById('message-container');
+
+        if (error) {
+            searchMsg.innerHTML = error;
+            searchMsg.className = 'alert alert-error';
+            searchMsg.style.display = 'block';
+        } else if (success) {
+            searchMsg.innerHTML = success + ' <a href="login.html">Login here</a>';
+            searchMsg.className = 'alert alert-success';
+            searchMsg.style.backgroundColor = '#dcfce7';
+            searchMsg.style.color = '#166534';
+            searchMsg.style.display = 'block';
+        }
+    </script>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

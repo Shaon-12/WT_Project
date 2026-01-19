@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Programs - Study Abroad</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script>
+        function loadPrograms() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '../php/programs.php', true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    try {
+                        var data = JSON.parse(xhr.responseText);
+                        if (data.error) return;
+
+                        document.getElementById('display-username').textContent = data.username;
+
+                        var tbody = document.getElementById('programs-body');
+                        if (data.programs && data.programs.length > 0) {
+                            var html = '';
+                            for (var i = 0; i < data.programs.length; i++) {
+                                var prog = data.programs[i];
+                                html += '<tr>';
+                                html += '<td style="font-weight: 500;">' + prog.program_name + '</td>';
+                                html += '<td><span class="badge badge-success">' + prog.department + '</span></td>';
+                                html += '<td style="color: grey; font-size: 0.9rem;">' + prog.created_at + '</td>';
+                                html += '</tr>';
+                            }
+                            tbody.innerHTML = html;
+                        } else {
+                            document.getElementById('programs-table-container').innerHTML =
+                                '<div class="text-center" style="padding: 3rem; color: grey;">' +
+                                '<p>No programs added yet.</p>' +
+                                '</div>';
+                        }
+                    } catch (e) { }
+                }
+            };
+            xhr.send();
+        }
+        loadPrograms();
+    </script>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="dashboard.html" class="sidebar-brand">StudyAbroad</a>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+                <a href="profile.html" class="sidebar-link">My Profile</a>
+                <a href="programs.html" class="sidebar-link active">My Programs</a>
+                <a href="applications.html" class="sidebar-link">Applications</a>
+                <a href="documents.html" class="sidebar-link">Documents</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="../php/logout.php" class="sidebar-link text-red">Logout</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <h2>Academic Programs</h2>
+                <div class="user-profile">
+                    <span id="display-username">Loading...</span>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <div id="message-container" style="display: none;" class="alert"></div>
+
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+
+                    <div class="card" style="height: fit-content;">
+                        <div class="card-header">
+                            <h3 class="card-title">Add New Program</h3>
+                        </div>
+                        <form method="post" action="../php/programs.php">
+                            <input type="hidden" name="add_program" value="1">
+                            <div class="form-group">
+                                <label class="form-label">Program Name</label>
+                                <input type="text" name="program_name" class="form-control"
+                                    placeholder="e.g. BSc in Computer Science" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Department</label>
+                                <select name="department" class="form-control" required
+                                    style="background-color: white;">
+                                    <option value="" disabled selected>Select Department</option>
+                                    <option value="FST">Faculty of Science & Technology (FST)</option>
+                                    <option value="FBA">Faculty of Business Administration (FBA)</option>
+                                    <option value="FASS">Faculty of Arts & Social Sciences (FASS)</option>
+                                    <option value="FE">Faculty of Engineering (FE)</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full mt-4">Add Program</button>
+                        </form>
+                    </div>
+
+
+                    <div class="card" id="programs-table-container">
+                        <div class="card-header">
+                            <h3 class="card-title">Current Programs</h3>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Program Name</th>
+                                        <th>Department</th>
+                                        <th>Added On</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="programs-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        const success = urlParams.get('success');
+        const msgDiv = document.getElementById('message-container');
+
+        if (error) {
+            msgDiv.textContent = error;
+            msgDiv.className = 'alert alert-error';
+            msgDiv.style.display = 'block';
+        } else if (success) {
+            msgDiv.textContent = success;
+            msgDiv.className = 'alert alert-success';
+            msgDiv.style.display = 'block';
+            msgDiv.style.backgroundColor = '#dcfce7';
+            msgDiv.style.color = '#166534';
+        }
+    </script>
+    <script src="../js/script.js"></script>
+</body>
+
+</html>
