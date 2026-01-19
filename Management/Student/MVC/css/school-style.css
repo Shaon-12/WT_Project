@@ -1,0 +1,379 @@
+/* My School Project CSS */
+
+body {
+    background-color: white;
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Header */
+.navbar {
+    background-color: lightblue;
+    padding: 10px;
+    border-bottom: 2px solid black;
+    overflow: hidden;
+}
+
+.nav-brand {
+    font-size: 20px;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+    float: left;
+}
+
+.nav-links {
+    float: right;
+}
+
+.nav-links a {
+    margin-left: 10px;
+    color: blue;
+}
+
+/* Main Layout */
+.dashboard-container {
+    width: 100%;
+}
+
+.sidebar {
+    width: 20%;
+    float: left;
+    background-color: #f0f0f0;
+    height: 100vh;
+    border-right: 2px solid black;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.main-content {
+    width: 80%;
+    float: left;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Sidebar Links */
+.sidebar-link {
+    display: block;
+    padding: 10px;
+    border-bottom: 1px solid gray;
+    color: black;
+    text-decoration: none;
+}
+
+.sidebar-link:hover {
+    background-color: #ddd;
+}
+
+/* Forms (Login/Register) */
+.auth-container {
+    width: 100%;
+    margin-top: 50px;
+    text-align: center;
+}
+
+.auth-card {
+    width: 300px;
+    margin: 0 auto;
+    border: 2px solid black;
+    padding: 20px;
+    background-color: #ffffcc;
+    /* yellow note look */
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-label {
+    display: block;
+    font-weight: bold;
+}
+
+.form-control {
+    width: 90%;
+    padding: 5px;
+}
+
+.btn {
+    padding: 5px 10px;
+    background-color: #ddd;
+    border: 1px solid black;
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: lightgreen;
+}
+
+.w-full {
+    width: 100%;
+}
+
+/* Tables */
+.table {
+    width: 100%;
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    border: 1px solid black;
+    padding: 5px;
+    text-align: left;
+}
+
+.table th {
+    background-color: #ccc;
+}
+
+/* Stats */
+.stats-grid {
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    float: left;
+    width: 22%;
+    margin-right: 2%;
+    border: 1px solid black;
+    padding: 10px;
+    background-color: white;
+}
+
+.stat-value {
+    font-size: 24px;
+    color: blue;
+}
+
+/* Alerts */
+.alert {
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: pink;
+}
+
+.alert-success {
+    background-color: lightgreen;
+}
+
+.text-red {
+    color: red;
+}
+
+/* Clear floats */
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+/* Tabs */
+.tabs {
+    border-bottom: 1px solid black;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.tab-btn {
+    float: left;
+    padding: 10px;
+    cursor: pointer;
+    background: #ccc;
+    border: 1px solid black;
+    margin-right: 5px;
+}
+
+.tab-btn.active {
+    background: white;
+    border-bottom: 1px solid white;
+}
+
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+}
+
+/* Topbar */
+.topbar {
+    border-bottom: 2px solid black;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.user-profile {
+    float: right;
+    font-weight: bold;
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    padding: 50px;
+    background-color: #eee;
+}
+
+/* Additional styles for student dashboard */
+.card {
+    border: 2px solid black;
+    margin-bottom: 15px;
+    background-color: white;
+}
+
+.card-header {
+    background-color: #ccc;
+    padding: 10px;
+    border-bottom: 2px solid black;
+    font-weight: bold;
+}
+
+.card-body {
+    padding: 15px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Application items */
+.application-item {
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #f9f9f9;
+}
+
+.application-info h4 {
+    margin: 0 0 5px 0;
+}
+
+.application-info p {
+    margin: 3px 0;
+}
+
+.application-actions {
+    margin-top: 10px;
+}
+
+/* Status badges */
+.status-badge {
+    padding: 3px 8px;
+    border: 1px solid black;
+    display: inline-block;
+    font-size: 12px;
+}
+
+.status-pending {
+    background-color: yellow;
+}
+
+.status-approved {
+    background-color: lightgreen;
+}
+
+.status-rejected {
+    background-color: pink;
+}
+
+.status-in-review {
+    background-color: lightblue;
+}
+
+/* Upload area */
+.upload-area {
+    border: 2px dashed black;
+    padding: 30px;
+    text-align: center;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+.file-list {
+    margin-top: 15px;
+}
+
+.file-item {
+    border: 1px solid black;
+    padding: 8px;
+    margin-bottom: 5px;
+    background-color: white;
+    overflow: hidden;
+}
+
+/* Timeline */
+.timeline {
+    padding-left: 20px;
+}
+
+.timeline-item {
+    border-left: 3px solid black;
+    padding-left: 15px;
+    margin-bottom: 20px;
+}
+
+.timeline-date {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.timeline-content {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border: 1px solid black;
+}
+
+/* Grid layout */
+.grid {
+    overflow: hidden;
+}
+
+.grid-2>div {
+    float: left;
+    width: 48%;
+    margin-right: 2%;
+}
+
+.grid-2>div:nth-child(2n) {
+    margin-right: 0;
+}
+
+/* Content sections */
+.content-section {
+    display: none;
+}
+
+.content-section.active {
+    display: block;
+}
+
+/* Page content */
+.page-content {
+    clear: both;
+}
+
+/* Buttons */
+.btn-secondary {
+    background-color: #ddd;
+}
+
+.btn-success {
+    background-color: lightgreen;
+}
+
+.btn-danger {
+    background-color: pink;
+}
