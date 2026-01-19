@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Application - Student Panel</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="student_dashboard.html" class="nav-brand">Study Abroad Portal - Student Panel</a>
+        <div class="nav-links">
+            <a href="student_dashboard.html">Dashboard</a>
+            <a href="applications.html">My Applications</a>
+            <a href="profile.html">Profile</a>
+            <a href="../php/logout.php">Logout</a>
+        </div>
+    </div>
+
+    <div class="dashboard-container clearfix">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <a href="student_dashboard.html" class="sidebar-link">Dashboard</a>
+            <a href="new_application.html" class="sidebar-link">New Application</a>
+            <a href="applications.html" class="sidebar-link">My Applications</a>
+            <a href="documents.html" class="sidebar-link">My Documents</a>
+            <a href="profile.html" class="sidebar-link">Profile Settings</a>
+            <a href="password.html" class="sidebar-link">Change Password</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="topbar">
+                <h2>Edit Application</h2>
+                <div class="user-profile">
+                    Student Panel
+                </div>
+            </div>
+
+            <!-- Message Display -->
+            <div id="message-container" class="alert" style="display: none;"></div>
+
+            <!-- Loading Spinner -->
+            <div id="loading" style="text-align: center; padding: 20px;">
+                Loading application data...
+            </div>
+
+            <!-- Edit Application Form (hidden initially) -->
+            <div id="editFormContainer" style="display: none;">
+                <div class="auth-card" style="width: 80%; margin: 0 auto;">
+                    <form id="editApplicationForm" action="../php/edit_application.php" method="POST">
+                        <input type="hidden" name="application_id" id="applicationId">
+                        
+                        <h3>Application Details</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Application Type</label>
+                            <select name="application_type" class="form-control" required id="appType">
+                                <option value="">-- Select Type --</option>
+                                <option value="Higher Studies">Higher Studies</option>
+                                <option value="Credit Transfer">Credit Transfer</option>
+                                <option value="Exchange Program">Exchange Program</option>
+                                <option value="Research Internship">Research Internship</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">University</label>
+                            <input type="text" class="form-control" id="universityDisplay" readonly>
+                            <small>University cannot be changed after submission</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Program</label>
+                            <input type="text" class="form-control" id="programDisplay" readonly>
+                            <small>Program cannot be changed after submission</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Intended Start Semester</label>
+                            <select name="start_semester" class="form-control" required id="startSemester">
+                                <option value="">-- Select Semester --</option>
+                                <option value="Fall 2024">Fall 2024</option>
+                                <option value="Spring 2025">Spring 2025</option>
+                                <option value="Fall 2025">Fall 2025</option>
+                                <option value="Spring 2026">Spring 2026</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Statement of Purpose</label>
+                            <textarea name="statement_of_purpose" class="form-control" rows="5" required id="sop"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Additional Notes</label>
+                            <textarea name="additional_notes" class="form-control" rows="3" id="additionalNotes"></textarea>
+                        </div>
+
+                        <h3>Current Documents</h3>
+                        <div id="currentDocuments">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+
+                        <h3>Upload New Documents (Optional)</h3>
+                        <div class="form-group">
+                            <label class="form-label">Updated Transcript</label>
+                            <input type="file" name="new_transcript" class="form-control" accept=".pdf,.doc,.docx">
+                            <small>Upload if you have updated transcript</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Additional Supporting Document</label>
+                            <input type="file" name="additional_document" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <small>Optional: Any additional supporting document</small>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="Update Application" class="btn btn-primary w-full">
+                            <button type="button" class="btn" onclick="cancelEdit()" style="margin-top: 10px;">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script>
+        // Get application ID from URL
+        function getApplicationId() {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Load application data
+        window.onload = function() {
+            var appId = getApplicationId();
+            if (!appId) {
+                alert('No application ID specified');
+                window.location.href = 'applications.html';
+                return;
+            }
+
+            // Check session
+            fetch('../php/check_session.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.authenticated || data.role !== 'student') {
+                        window.location.href = '../html/login.html';
+                        return;
+                    }
+                    
+                    // Load application data
+                    loadApplicationData(appId);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        };
+
+        function loadApplicationData(appId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '../php/student_applications.php?action=get_single&id=' + appId, true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    document.getElementById('loading').style.display = 'none';
+                    
+                    if (xhr.status == 200) {
+                        try {
+                            var application = JSON.parse(xhr.responseText);
+                            
+                            if (application.error) {
+                                document.getElementById('message-container').textContent = application.error;
+                                document.getElementById('message-container').className = 'alert';
+                                document.getElementById('message-container').style.display = 'block';
+                                return;
+                            }
+                            
+                            // Check if application can be edited
+                            if (application.status !== 'Draft' && application.status !== 'Pending') {
+                                document.getElementById('message-container').textContent = 'This application cannot be edited. Status: ' + application.status;
+                                document.getElementById('message-container').className = 'alert';
+                                document.getElementById('message-container').style.display = 'block';
+                                return;
+                            }
+                            
+                            // Populate form
+                            document.getElementById('applicationId').value = application.id;
+                            document.getElementById('appType').value = application.application_type;
+                            document.getElementById('universityDisplay').value = application.university_name;
+                            document.getElementById('programDisplay').value = application.program_name + ' - ' + application.department;
+                            document.getElementById('startSemester').value = application.start_semester;
+                            document.getElementById('sop').value = application.statement_of_purpose;
+                            document.getElementById('additionalNotes').value = application.additional_notes || '';
+                            
+                            // Display current documents
+                            var docsHtml = '';
+                            if (application.documents && application.documents.length > 0) {
+                                docsHtml += '<ul>';
+                                for (var i = 0; i < application.documents.length; i++) {
+                                    var doc = application.documents[i];
+                                    docsHtml += '<li>' + doc.document_type + ': ' + doc.file_name + '</li>';
+                                }
+                                docsHtml += '</ul>';
+                            } else {
+                                docsHtml = '<p>No documents uploaded yet.</p>';
+                            }
+                            document.getElementById('currentDocuments').innerHTML = docsHtml;
+                            
+                            // Show form
+                            document.getElementById('editFormContainer').style.display = 'block';
+                            
+                        } catch (e) {
+                            console.error('JSON Parse Error:', e);
+                            document.getElementById('message-container').textContent = 'Error loading application data';
+                            document.getElementById('message-container').className = 'alert';
+                            document.getElementById('message-container').style.display = 'block';
+                        }
+                    } else {
+                        document.getElementById('message-container').textContent = 'Error loading application';
+                        document.getElementById('message-container').className = 'alert';
+                        document.getElementById('message-container').style.display = 'block';
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function cancelEdit() {
+            if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
+                window.location.href = 'applications.html';
+            }
+        }
+
+        // Form validation
+        document.getElementById('editApplicationForm').onsubmit = function(e) {
+            e.preventDefault();
+            
+            var formData = new FormData(this);
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '../php/edit_application.php', true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    var msgDiv = document.getElementById('message-container');
+                    
+                    if (xhr.status == 200) {
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            
+                            if (response.success) {
+                                msgDiv.textContent = response.message || 'Application updated successfully';
+                                msgDiv.className = 'alert alert-success';
+                                msgDiv.style.display = 'block';
+                                
+                                // Redirect after 2 seconds
+                                setTimeout(function() {
+                                    window.location.href = 'application_detail.html?id=' + response.application_id;
+                                }, 2000);
+                            } else {
+                                msgDiv.textContent = response.error || 'Error updating application';
+                                msgDiv.className = 'alert';
+                                msgDiv.style.display = 'block';
+                            }
+                        } catch (e) {
+                            msgDiv.textContent = 'Error processing response';
+                            msgDiv.className = 'alert';
+                            msgDiv.style.display = 'block';
+                        }
+                    } else {
+                        msgDiv.textContent = 'Network error';
+                        msgDiv.className = 'alert';
+                        msgDiv.style.display = 'block';
+                    }
+                }
+            };
+            
+            xhr.send(formData);
+        };
+    </script>
+</body>
+</html>

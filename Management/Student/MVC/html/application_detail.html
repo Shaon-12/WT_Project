@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Application Details - Student Panel</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="student_dashboard.html" class="nav-brand">Study Abroad Portal - Student Panel</a>
+        <div class="nav-links">
+            <a href="student_dashboard.html">Dashboard</a>
+            <a href="applications.html">My Applications</a>
+            <a href="profile.html">Profile</a>
+            <a href="../php/logout.php">Logout</a>
+        </div>
+    </div>
+
+    <div class="dashboard-container clearfix">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <a href="student_dashboard.html" class="sidebar-link">Dashboard</a>
+            <a href="new_application.html" class="sidebar-link">New Application</a>
+            <a href="applications.html" class="sidebar-link">My Applications</a>
+            <a href="documents.html" class="sidebar-link">My Documents</a>
+            <a href="profile.html" class="sidebar-link">Profile Settings</a>
+            <a href="password.html" class="sidebar-link">Change Password</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="topbar">
+                <h2>Application Details</h2>
+                <div class="user-profile">
+                    Student Panel
+                </div>
+                <div>
+                    <a href="applications.html" class="btn">Back to Applications</a>
+                </div>
+            </div>
+
+            <!-- Message Display -->
+            <div id="message-container" class="alert" style="display: none;"></div>
+
+            <!-- Loading Spinner -->
+            <div id="loading" style="text-align: center; padding: 20px;">
+                Loading application details...
+            </div>
+
+            <!-- Application Details (hidden initially) -->
+            <div id="applicationDetails" style="display: none;">
+                <!-- Application Info Card -->
+                <div class="auth-card" style="width: 90%; margin: 0 auto 20px auto;">
+                    <h3>Application Information</h3>
+                    
+                    <div style="overflow: hidden; margin-bottom: 15px;">
+                        <div style="float: left; width: 48%;">
+                            <strong>Application ID:</strong> <span id="appId"></span>
+                        </div>
+                        <div style="float: right; width: 48%;">
+                            <strong>Status:</strong> <span id="appStatus" style="font-weight: bold;"></span>
+                        </div>
+                    </div>
+                    
+                    <div style="overflow: hidden; margin-bottom: 15px;">
+                        <div style="float: left; width: 48%;">
+                            <strong>Application Type:</strong> <span id="appType"></span>
+                        </div>
+                        <div style="float: right; width: 48%;">
+                            <strong>Submitted Date:</strong> <span id="appDate"></span>
+                        </div>
+                    </div>
+                    
+                    <div style="overflow: hidden; margin-bottom: 15px;">
+                        <div style="float: left; width: 48%;">
+                            <strong>University:</strong> <span id="appUniversity"></span>
+                        </div>
+                        <div style="float: right; width: 48%;">
+                            <strong>Program:</strong> <span id="appProgram"></span>
+                        </div>
+                    </div>
+                    
+                    <div style="overflow: hidden; margin-bottom: 15px;">
+                        <div style="float: left; width: 48%;">
+                            <strong>Department:</strong> <span id="appDepartment"></span>
+                        </div>
+                        <div style="float: right; width: 48%;">
+                            <strong>Start Semester:</strong> <span id="appSemester"></span>
+                        </div>
+                    </div>
+                    
+                    <div id="actionButtons" style="margin-top: 20px; text-align: center;">
+                        <!-- Will show edit button if applicable -->
+                    </div>
+                </div>
+
+                <!-- Statement of Purpose -->
+                <div class="auth-card" style="width: 90%; margin: 0 auto 20px auto;">
+                    <h3>Statement of Purpose</h3>
+                    <div style="border: 1px solid #ddd; padding: 15px; background-color: #f9f9f9;">
+                        <p id="appSOP"></p>
+                    </div>
+                </div>
+
+                <!-- Additional Notes -->
+                <div id="notesSection" class="auth-card" style="width: 90%; margin: 0 auto 20px auto; display: none;">
+                    <h3>Additional Notes</h3>
+                    <div style="border: 1px solid #ddd; padding: 15px; background-color: #f9f9f9;">
+                        <p id="appNotes"></p>
+                    </div>
+                </div>
+
+                <!-- Documents -->
+                <div class="auth-card" style="width: 90%; margin: 0 auto;">
+                    <h3>Application Documents</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Document Type</th>
+                                <th>File Name</th>
+                                <th>Uploaded Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="documentsTable">
+                            <!-- Will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                    
+                    <div style="margin-top: 20px;">
+                        <button class="btn" onclick="uploadAdditionalDocument()">Upload Additional Document</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Document Modal (hidden) -->
+    <div id="uploadModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; width: 400px;">
+            <h3>Upload Additional Document</h3>
+            <form id="uploadDocumentForm">
+                <input type="hidden" id="modalAppId">
+                
+                <div class="form-group">
+                    <label class="form-label">Document Type</label>
+                    <select name="document_type" class="form-control" required>
+                        <option value="">-- Select Type --</option>
+                        <option value="additional_transcript">Additional Transcript</option>
+                        <option value="certificate">Certificate</option>
+                        <option value="reference_letter">Reference Letter</option>
+                        <option value="other">Other Document</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">File</label>
+                    <input type="file" name="document_file" class="form-control" required accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description (Optional)</label>
+                    <textarea name="description" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                    <button type="button" class="btn" onclick="closeUploadModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script>
+        // Get application ID from URL
+        function getApplicationId() {
+            var urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Load application details
+        window.onload = function() {
+            var appId = getApplicationId();
+            if (!appId) {
+                alert('No application ID specified');
+                window.location.href = 'applications.html';
+                return;
+            }
+
+            // Check session
+            fetch('../php/check_session.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.authenticated || data.role !== 'student') {
+                        window.location.href = '../html/login.html';
+                        return;
+                    }
+                    
+                    // Load application details
+                    loadApplicationDetails(appId);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        };
+
+        function loadApplicationDetails(appId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '../php/student_applications.php?action=get_single&id=' + appId, true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    document.getElementById('loading').style.display = 'none';
+                    
+                    if (xhr.status == 200) {
+                        try {
+                            var application = JSON.parse(xhr.responseText);
+                            
+                            if (application.error) {
+                                document.getElementById('message-container').textContent = application.error;
+                                document.getElementById('message-container').className = 'alert';
+                                document.getElementById('message-container').style.display = 'block';
+                                return;
+                            }
+                            
+                            // Display application details
+                            document.getElementById('appId').textContent = application.id;
+                            document.getElementById('appType').textContent = application.application_type;
+                            document.getElementById('appDate').textContent = application.application_date;
+                            document.getElementById('appUniversity').textContent = application.university_name;
+                            document.getElementById('appProgram').textContent = application.program_name;
+                            document.getElementById('appDepartment').textContent = application.department;
+                            document.getElementById('appSemester').textContent = application.start_semester;
+                            document.getElementById('appSOP').textContent = application.statement_of_purpose;
+                            
+                            // Status with color
+                            var statusElem = document.getElementById('appStatus');
+                            statusElem.textContent = application.status;
+                            if (application.status === 'Pending') statusElem.style.color = 'orange';
+                            else if (application.status === 'Accepted') statusElem.style.color = 'green';
+                            else if (application.status === 'Rejected') statusElem.style.color = 'red';
+                            else if (application.status === 'Under Review') statusElem.style.color = 'blue';
+                            else if (application.status === 'Draft') statusElem.style.color = 'gray';
+                            
+                            // Additional notes
+                            if (application.additional_notes) {
+                                document.getElementById('appNotes').textContent = application.additional_notes;
+                                document.getElementById('notesSection').style.display = 'block';
+                            }
+                            
+                            // Action buttons
+                            var actionDiv = document.getElementById('actionButtons');
+                            if (application.status === 'Draft' || application.status === 'Pending') {
+                                actionDiv.innerHTML = '<a href="edit_application.html?id=' + application.id + '" class="btn btn-primary">Edit Application</a>';
+                            }
+                            
+                            // Documents table
+                            var docsTable = document.getElementById('documentsTable');
+                            var docsHtml = '';
+                            
+                            if (application.documents && application.documents.length > 0) {
+                                for (var i = 0; i < application.documents.length; i++) {
+                                    var doc = application.documents[i];
+                                    docsHtml += '<tr>';
+                                    docsHtml += '<td>' + doc.document_type + '</td>';
+                                    docsHtml += '<td>' + doc.file_name + '</td>';
+                                    docsHtml += '<td>' + doc.uploaded_date + '</td>';
+                                    docsHtml += '<td><button class="btn btn-outline" onclick="downloadDocument(\'' + doc.file_name + '\')">Download</button></td>';
+                                    docsHtml += '</tr>';
+                                }
+                            } else {
+                                docsHtml = '<tr><td colspan="4">No documents uploaded yet.</td></tr>';
+                            }
+                            
+                            docsTable.innerHTML = docsHtml;
+                            
+                            // Set modal app ID
+                            document.getElementById('modalAppId').value = application.id;
+                            
+                            // Show details
+                            document.getElementById('applicationDetails').style.display = 'block';
+                            
+                        } catch (e) {
+                            console.error('JSON Parse Error:', e);
+                            document.getElementById('message-container').textContent = 'Error loading application details';
+                            document.getElementById('message-container').className = 'alert';
+                            document.getElementById('message-container').style.display = 'block';
+                        }
+                    } else {
+                        document.getElementById('message-container').textContent = 'Error loading application';
+                        document.getElementById('message-container').className = 'alert';
+                        document.getElementById('message-container').style.display = 'block';
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function uploadAdditionalDocument() {
+            document.getElementById('uploadModal').style.display = 'block';
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+            document.getElementById('uploadDocumentForm').reset();
+        }
+
+        function downloadDocument(filename) {
+            window.open('../uploads/' + filename, '_blank');
+        }
+
+        // Upload document form
+        document.getElementById('uploadDocumentForm').onsubmit = function(e) {
+            e.preventDefault();
+            
+            var formData = new FormData(this);
+            var appId = document.getElementById('modalAppId').value;
+            formData.append('application_id', appId);
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '../php/upload_document.php', true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            
+                            if (response.success) {
+                                alert('Document uploaded successfully!');
+                                closeUploadModal();
+                                loadApplicationDetails(appId); // Reload details
+                            } else {
+                                alert('Error: ' + response.error);
+                            }
+                        } catch (e) {
+                            alert('Error processing response');
+                        }
+                    } else {
+                        alert('Network error');
+                    }
+                }
+            };
+            
+            xhr.send(formData);
+        };
+    </script>
+</body>
+</html>

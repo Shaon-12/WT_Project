@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Application - Student Panel</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="student_dashboard.html" class="nav-brand">Study Abroad Portal - Student Panel</a>
+        <div class="nav-links">
+            <a href="student_dashboard.html">Dashboard</a>
+            <a href="applications.html">My Applications</a>
+            <a href="profile.html">Profile</a>
+            <a href="../php/logout.php">Logout</a>
+        </div>
+    </div>
+
+    <div class="dashboard-container clearfix">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <a href="student_dashboard.html" class="sidebar-link">Dashboard</a>
+            <a href="new_application.html" class="sidebar-link active">New Application</a>
+            <a href="applications.html" class="sidebar-link">My Applications</a>
+            <a href="documents.html" class="sidebar-link">My Documents</a>
+            <a href="profile.html" class="sidebar-link">Profile Settings</a>
+            <a href="password.html" class="sidebar-link">Change Password</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="topbar">
+                <h2>Submit New Application</h2>
+                <div class="user-profile">
+                    Student Panel
+                </div>
+            </div>
+
+            <!-- Message Display -->
+            <div id="message-container" class="alert" style="display: none;"></div>
+
+            <!-- Application Form -->
+            <div class="auth-card" style="width: 80%; margin: 0 auto;">
+                <form id="applicationForm" action="../php/student_applications.php" method="POST" enctype="multipart/form-data">
+                    <h3>Application Details</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Application Type</label>
+                        <select name="application_type" class="form-control" required>
+                            <option value="">-- Select Type --</option>
+                            <option value="Higher Studies">Higher Studies</option>
+                            <option value="Credit Transfer">Credit Transfer</option>
+                            <option value="Exchange Program">Exchange Program</option>
+                            <option value="Research Internship">Research Internship</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Select University</label>
+                        <select name="university_id" class="form-control" required id="universitySelect">
+                            <option value="">-- Select University --</option>
+                            <!-- Will be populated by JavaScript -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Select Program</label>
+                        <select name="program_id" class="form-control" required id="programSelect">
+                            <option value="">-- Select Program --</option>
+                            <!-- Will be populated based on university selection -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Intended Start Semester</label>
+                        <select name="start_semester" class="form-control" required>
+                            <option value="">-- Select Semester --</option>
+                            <option value="Fall 2024">Fall 2024</option>
+                            <option value="Spring 2025">Spring 2025</option>
+                            <option value="Fall 2025">Fall 2025</option>
+                            <option value="Spring 2026">Spring 2026</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Statement of Purpose</label>
+                        <textarea name="statement_of_purpose" class="form-control" rows="5" required placeholder="Explain why you want to study abroad, your goals, etc."></textarea>
+                    </div>
+
+                    <h3>Required Documents</h3>
+                    <div class="form-group">
+                        <label class="form-label">Academic Transcript</label>
+                        <input type="file" name="transcript" class="form-control" accept=".pdf,.doc,.docx" required>
+                        <small>Upload your latest academic transcript (PDF or Word)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Passport Copy</label>
+                        <input type="file" name="passport" class="form-control" accept=".pdf,.jpg,.jpeg,.png" required>
+                        <small>Upload scanned copy of passport (PDF or Image)</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">CV/Resume</label>
+                        <input type="file" name="cv" class="form-control" accept=".pdf,.doc,.docx">
+                        <small>Optional: Upload your CV/Resume</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Letter of Recommendation</label>
+                        <input type="file" name="recommendation_letter" class="form-control" accept=".pdf,.doc,.docx">
+                        <small>Optional: Upload recommendation letter</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Additional Notes</label>
+                        <textarea name="additional_notes" class="form-control" rows="3" placeholder="Any additional information for the university"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Submit Application" class="btn btn-primary w-full">
+                        <button type="button" class="btn" onclick="saveAsDraft()" style="margin-top: 10px;">Save as Draft</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script>
+        // Load universities and programs
+        window.onload = function() {
+            // Check session
+            fetch('../php/check_session.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.authenticated || data.role !== 'student') {
+                        window.location.href = '../html/login.html';
+                        return;
+                    }
+                    
+                    // Load universities
+                    loadUniversities();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        };
+
+        function loadUniversities() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '../php/universities.php', true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var universities = JSON.parse(xhr.responseText);
+                    var select = document.getElementById('universitySelect');
+                    var html = '<option value="">-- Select University --</option>';
+                    
+                    for (var i = 0; i < universities.length; i++) {
+                        var uni = universities[i];
+                        html += '<option value="' + uni.id + '">' + uni.university_name + ' (' + uni.university_country + ')</option>';
+                    }
+                    
+                    select.innerHTML = html;
+                }
+            };
+            xhr.send();
+        }
+
+        // When university is selected, load its programs
+        document.getElementById('universitySelect').onchange = function() {
+            var uniId = this.value;
+            if (!uniId) return;
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '../php/programs.php?university_id=' + uniId, true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var programs = JSON.parse(xhr.responseText);
+                    var select = document.getElementById('programSelect');
+                    var html = '<option value="">-- Select Program --</option>';
+                    
+                    for (var i = 0; i < programs.length; i++) {
+                        var prog = programs[i];
+                        html += '<option value="' + prog.id + '">' + prog.program_name + ' - ' + prog.department + '</option>';
+                    }
+                    
+                    select.innerHTML = html;
+                }
+            };
+            xhr.send();
+        };
+
+        function saveAsDraft() {
+            // Get form data
+            var form = document.getElementById('applicationForm');
+            var formData = new FormData(form);
+            formData.append('save_draft', 'true');
+            
+            // Submit as draft
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '../php/student_applications.php', true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            if (response.success) {
+                                alert('Application saved as draft!');
+                                window.location.href = 'applications.html';
+                            } else {
+                                alert('Error: ' + response.error);
+                            }
+                        } catch (e) {
+                            console.error('Error:', e);
+                        }
+                    }
+                }
+            };
+            
+            xhr.send(formData);
+        }
+
+        // Form validation
+        document.getElementById('applicationForm').onsubmit = function(e) {
+            // Basic validation similar to register form
+            var requiredFiles = ['transcript', 'passport'];
+            for (var i = 0; i < requiredFiles.length; i++) {
+                var fileInput = this.querySelector('input[name="' + requiredFiles[i] + '"]');
+                if (!fileInput.files.length) {
+                    alert('Please upload ' + requiredFiles[i]);
+                    return false;
+                }
+            }
+            
+            return true;
+        };
+    </script>
+</body>
+</html>

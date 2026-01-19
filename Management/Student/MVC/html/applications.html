@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applications - StudyAbroad</title>
+    <link rel="stylesheet" href="../css/school-style.css">
+    <script>
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '../php/check_session.php', true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status == 200) {
+                    var data = JSON.parse(xhr.responseText);
+                    if (!data.authenticated || data.role !== 'university') {
+                        window.location.href = 'login.html';
+                    } else {
+                        document.getElementById('display-username').textContent = data.username;
+                    }
+                }
+            }
+        };
+        xhr.send();
+    </script>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="dashboard.html" class="sidebar-brand">StudyAbroad</a>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="sidebar-link">Dashboard</a>
+                <a href="applications.html" class="sidebar-link active">Applications</a>
+                <a href="programs.html" class="sidebar-link">Programs</a>
+                <a href="documents.html" class="sidebar-link">Documents</a>
+                <a href="profile.html" class="sidebar-link">Profile</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="../php/logout.php" class="sidebar-link text-red">Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="topbar">
+                <h2>Applications</h2>
+                <div class="user-profile">
+                    <span id="display-username">Loading...</span>
+                </div>
+            </header>
+
+            <div class="page-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Student Applications</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Student Name</th>
+                                    <th>Program</th>
+                                    <th>Date</th>
+                                    <th>Documents</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="applicationsBody">
+                                <tr>
+                                    <td>101</td>
+                                    <td>Shaon</td>
+                                    <td>Computer Science</td>
+                                    <td>2023-10-24</td>
+                                    <td>2 Files</td>
+                                    <td><span class="status-badge status-pending">Pending</span></td>
+                                    <td><button class="btn">View</button></td>
+                                </tr>
+                                <tr>
+                                    <td>102</td>
+                                    <td>Rupok</td>
+                                    <td>Computer Science</td>
+                                    <td>2023-10-23</td>
+                                    <td>2 Files</td>
+                                    <td><span class="status-badge status-approved">Accepted</span></td>
+                                    <td><button class="btn">View</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/script.js"></script>
+</body>
+
+</html>

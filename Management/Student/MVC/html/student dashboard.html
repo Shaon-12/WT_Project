@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard - Study Abroad Portal</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="student_dashboard.html" class="nav-brand">Study Abroad Portal - Student Panel</a>
+        <div class="nav-links">
+            <a href="applications.html">My Applications</a>
+            <a href="profile.html">Profile</a>
+            <a href="password.html">Password</a>
+            <a href="../php/logout.php">Logout</a>
+        </div>
+    </div>
+
+    <div class="dashboard-container clearfix">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <a href="student_dashboard.html" class="sidebar-link">Dashboard</a>
+            <a href="new_application.html" class="sidebar-link">New Application</a>
+            <a href="applications.html" class="sidebar-link">My Applications</a>
+            <a href="documents.html" class="sidebar-link">My Documents</a>
+            <a href="profile.html" class="sidebar-link">Profile Settings</a>
+            <a href="password.html" class="sidebar-link">Change Password</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="topbar">
+                <h2>Welcome back, <span id="username-display">Student</span></h2>
+                <div class="user-profile">
+                    Student Panel
+                </div>
+            </div>
+
+            <!-- Message Display -->
+            <div id="message-container" class="alert" style="display: none;"></div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid clearfix">
+                <div class="stat-card">
+                    <h3>Total Applications</h3>
+                    <div class="stat-value" id="total-apps">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending</h3>
+                    <div class="stat-value" id="pending-apps">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Accepted</h3>
+                    <div class="stat-value" id="accepted-apps">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Rejected</h3>
+                    <div class="stat-value" id="rejected-apps">0</div>
+                </div>
+            </div>
+
+            <!-- Recent Applications Table -->
+            <h3>Recent Applications</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Application ID</th>
+                        <th>University</th>
+                        <th>Program</th>
+                        <th>Date Applied</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="recentApplicationsBody">
+                    <!-- Will be populated by JavaScript -->
+                </tbody>
+            </table>
+
+            <!-- Quick Actions -->
+            <div style="margin-top: 30px;">
+                <a href="new_application.html" class="btn btn-primary">Submit New Application</a>
+                <a href="documents.html" class="btn">Upload Documents</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script>
+        // Load user info and recent applications
+        window.onload = function() {
+            // Load session info
+            fetch('../php/check_session.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.authenticated && data.role === 'student') {
+                        document.getElementById('username-display').textContent = data.username;
+                        
+                        // Load student stats and applications
+                        loadStudentStats();
+                        loadRecentApplications();
+                    } else {
+                        window.location.href = '../html/login.html';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        };
+
+        function loadStudentStats() {
+            // This would connect to backend to get real stats
+            // For now, using mock data similar to University panel structure
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '../db/student_stats.json?v=' + new Date().getTime(), true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var stats = JSON.parse(xhr.responseText);
+                    document.getElementById('total-apps').textContent = stats.total || 0;
+                    document.getElementById('pending-apps').textContent = stats.pending || 0;
+                    document.getElementById('accepted-apps').textContent = stats.accepted || 0;
+                    document.getElementById('rejected-apps').textContent = stats.rejected || 0;
+                }
+            };
+            xhr.send();
+        }
+
+        function loadRecentApplications() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '../db/student_applications.json?v=' + new Date().getTime(), true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var applications = JSON.parse(xhr.responseText);
+                    var tableBody = document.getElementById('recentApplicationsBody');
+                    var html = '';
+                    
+                    // Show only 5 most recent
+                    var recent = applications.slice(0, 5);
+                    
+                    for (var i = 0; i < recent.length; i++) {
+                        var app = recent[i];
+                        html += '<tr>';
+                        html += '<td>' + app.id + '</td>';
+                        html += '<td>' + app.university + '</td>';
+                        html += '<td>' + app.program + '</td>';
+                        html += '<td>' + app.date + '</td>';
+                        html += '<td>' + app.status + '</td>';
+                        html += '<td><button class="btn btn-outline" onclick="viewApplication(' + app.id + ')">View</button></td>';
+                        html += '</tr>';
+                    }
+                    
+                    tableBody.innerHTML = html;
+                }
+            };
+            xhr.send();
+        }
+
+        function viewApplication(appId) {
+            window.location.href = 'application_detail.html?id=' + appId;
+        }
+    </script>
+</body>
+</html>

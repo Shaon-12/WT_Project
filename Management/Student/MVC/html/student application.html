@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Applications - Student Panel</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="student_dashboard.html" class="nav-brand">Study Abroad Portal - Student Panel</a>
+        <div class="nav-links">
+            <a href="student_dashboard.html">Dashboard</a>
+            <a href="applications.html">My Applications</a>
+            <a href="profile.html">Profile</a>
+            <a href="../php/logout.php">Logout</a>
+        </div>
+    </div>
+
+    <div class="dashboard-container clearfix">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <a href="student_dashboard.html" class="sidebar-link">Dashboard</a>
+            <a href="new_application.html" class="sidebar-link">New Application</a>
+            <a href="applications.html" class="sidebar-link active">My Applications</a>
+            <a href="documents.html" class="sidebar-link">My Documents</a>
+            <a href="profile.html" class="sidebar-link">Profile Settings</a>
+            <a href="password.html" class="sidebar-link">Change Password</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="topbar">
+                <h2>My Applications</h2>
+                <div class="user-profile">
+                    Student Panel
+                </div>
+            </div>
+
+            <!-- Message Display -->
+            <div id="message-container" class="alert" style="display: none;"></div>
+
+            <!-- Applications Table -->
+            <div style="margin-bottom: 20px;">
+                <a href="new_application.html" class="btn btn-primary">+ New Application</a>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Application ID</th>
+                        <th>University</th>
+                        <th>Program</th>
+                        <th>Application Date</th>
+                        <th>Status</th>
+                        <th>Documents</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="applicationsBody">
+                    <!-- Will be populated by JavaScript -->
+                </tbody>
+            </table>
+
+            <!-- Status Legend -->
+            <div style="margin-top: 20px; font-size: 14px;">
+                <strong>Status Legend:</strong>
+                <span style="color: orange; margin-left: 10px;">● Pending</span>
+                <span style="color: green; margin-left: 10px;">● Accepted</span>
+                <span style="color: red; margin-left: 10px;">● Rejected</span>
+                <span style="color: blue; margin-left: 10px;">● Under Review</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+    <script>
+        // Load all student applications
+        window.onload = function() {
+            // Check session
+            fetch('../php/check_session.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.authenticated || data.role !== 'student') {
+                        window.location.href = '../html/login.html';
+                        return;
+                    }
+                    
+                    // Load applications
+                    loadStudentApplications();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        };
+
+        function loadStudentApplications() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '../php/student_applications.php?action=get_all', true);
+            
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        try {
+                            var response = JSON.parse(xhr.responseText);
+                            
+                            if (response.error) {
+                                document.getElementById('message-container').textContent = response.error;
+                                document.getElementById('message-container').className = 'alert';
+                                document.getElementById('message-container').style.display = 'block';
+                                return;
+                            }
+                            
+                            var applications = response.applications || [];
+                            var tableBody = document.getElementById('applicationsBody');
+                            var html = '';
+                            
+                            for (var i = 0; i < applications.length; i++) {
+                                var app = applications[i];
+                                
+                                // Determine status color
+                                var statusColor = 'black';
+                                if (app.status === 'Pending') statusColor = 'orange';
+                                else if (app.status === 'Accepted') statusColor = 'green';
+                                else if (app.status === 'Rejected') statusColor = 'red';
+                                else if (app.status === 'Under Review') statusColor = 'blue';
+                                
+                                html += '<tr>';
+                                html += '<td>' + app.id + '</td>';
+                                html += '<td>' + app.university_name + '</td>';
+                                html += '<td>' + app.program_name + '</td>';
+                                html += '<td>' + app.application_date + '</td>';
+                                html += '<td style="color: ' + statusColor + '; font-weight: bold;">' + app.status + '</td>';
+                                html += '<td>' + (app.documents_count || 0) + ' files</td>';
+                                html += '<td>';
+                                html += '<button class="btn btn-outline" onclick="viewApplication(' + app.id + ')">View</button>';
+                                if (app.status === 'Pending' || app.status === 'Draft') {
+                                    html += ' <button class="btn" onclick="editApplication(' + app.id + ')">Edit</button>';
+                                }
+                                html += '</td>';
+                                html += '</tr>';
+                            }
+                            
+                            tableBody.innerHTML = html;
+                            
+                        } catch (e) {
+                            console.error('JSON Parse Error:', e);
+                        }
+                    } else {
+                        document.getElementById('message-container').textContent = 'Error loading applications';
+                        document.getElementById('message-container').className = 'alert';
+                        document.getElementById('message-container').style.display = 'block';
+                    }
+                }
+            };
+            xhr.send();
+        }
+
+        function viewApplication(appId) {
+            window.location.href = 'application_detail.html?id=' + appId;
+        }
+
+        function editApplication(appId) {
+            window.location.href = 'edit_application.html?id=' + appId;
+        }
+    </script>
+</body>
+</html>

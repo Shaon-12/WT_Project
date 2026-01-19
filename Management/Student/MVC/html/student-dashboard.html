@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - StudyAbroad</title>
+    <meta name="description" content="Manage your study abroad applications, track status, and upload documents">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="sidebar-brand"
+                    onclick="showSection('my-applications'); return false;">StudyAbroad</a>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="sidebar-link active" data-section="my-applications">My Applications</a>
+                <a href="#" class="sidebar-link" data-section="new-application">New Application</a>
+                <a href="#" class="sidebar-link" data-section="track-status">Track Status</a>
+                <a href="#" class="sidebar-link" data-section="documents">Documents</a>
+                <a href="#" class="sidebar-link" data-section="history">History</a>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="sidebar-link text-red"
+                    onclick="alert('Logout functionality will be connected to backend'); return false;">Logout</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <h2 id="page-title">My Applications</h2>
+                <div class="user-profile">
+                    <span id="display-username">Student User</span>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+
+                <!-- Section 1: My Applications Overview -->
+                <section id="my-applications" class="content-section active">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Application Overview</h3>
+                            <button class="btn btn-primary" onclick="showSection('new-application')">
+                                + New Application
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div id="applications-list">
+                                <!-- Applications will be loaded here dynamically -->
+                                <div class="application-item">
+                                    <div class="application-info">
+                                        <h4>Master's in Computer Science - MIT</h4>
+                                        <p><strong>Type:</strong> Higher Studies</p>
+                                        <p><strong>Submitted:</strong> January 10, 2026</p>
+                                        <p><strong>Status:</strong> <span class="status-badge status-in-review">In
+                                                Review</span></p>
+                                    </div>
+                                    <div class="application-actions">
+                                        <button class="btn btn-secondary" onclick="viewApplication(1)">View</button>
+                                        <button class="btn btn-primary" onclick="editApplication(1)">Edit</button>
+                                    </div>
+                                </div>
+
+                                <div class="application-item">
+                                    <div class="application-info">
+                                        <h4>Credit Transfer - Stanford University</h4>
+                                        <p><strong>Type:</strong> Credit Transfer</p>
+                                        <p><strong>Submitted:</strong> January 5, 2026</p>
+                                        <p><strong>Status:</strong> <span
+                                                class="status-badge status-pending">Pending</span></p>
+                                    </div>
+                                    <div class="application-actions">
+                                        <button class="btn btn-secondary" onclick="viewApplication(2)">View</button>
+                                        <button class="btn btn-primary" onclick="editApplication(2)">Edit</button>
+                                    </div>
+                                </div>
+
+                                <div class="application-item">
+                                    <div class="application-info">
+                                        <h4>PhD in Data Science - Oxford</h4>
+                                        <p><strong>Type:</strong> Higher Studies</p>
+                                        <p><strong>Submitted:</strong> December 28, 2025</p>
+                                        <p><strong>Status:</strong> <span
+                                                class="status-badge status-approved">Approved</span></p>
+                                    </div>
+                                    <div class="application-actions">
+                                        <button class="btn btn-secondary" onclick="viewApplication(3)">View</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 2: New Application Form -->
+                <section id="new-application" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Submit New Application</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="new-application-form">
+                                <div class="grid grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label" for="app-type">Application Type</label>
+                                        <select id="app-type" name="app-type" class="form-control" required>
+                                            <option value="">Select Type</option>
+                                            <option value="higher-studies">Higher Studies</option>
+                                            <option value="credit-transfer">Credit Transfer</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="program">Program/University</label>
+                                        <input type="text" id="program" name="program" class="form-control"
+                                            placeholder="e.g., Master's in CS - MIT" required>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label" for="country">Country</label>
+                                        <input type="text" id="country" name="country" class="form-control"
+                                            placeholder="e.g., United States" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="intake">Intake/Semester</label>
+                                        <input type="text" id="intake" name="intake" class="form-control"
+                                            placeholder="e.g., Fall 2026" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="personal-statement">Personal Statement</label>
+                                    <textarea id="personal-statement" name="personal-statement" class="form-control"
+                                        rows="5"
+                                        placeholder="Explain why you want to pursue this program..."></textarea>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label" for="academic-background">Academic Background</label>
+                                    <textarea id="academic-background" name="academic-background" class="form-control"
+                                        rows="3"
+                                        placeholder="Briefly describe your academic qualifications..."></textarea>
+                                </div>
+
+                                <div class="grid grid-2">
+                                    <div class="form-group">
+                                        <label class="form-label" for="gpa">GPA/CGPA</label>
+                                        <input type="text" id="gpa" name="gpa" class="form-control"
+                                            placeholder="e.g., 3.8/4.0">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" for="test-scores">Test Scores (if any)</label>
+                                        <input type="text" id="test-scores" name="test-scores" class="form-control"
+                                            placeholder="e.g., IELTS 7.5, GRE 320">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Upload Documents</label>
+                                    <div class="upload-area" id="upload-area-new">
+                                        <p>📄 Drag and drop files here or click to browse</p>
+                                        <input type="file" id="file-input-new" multiple style="display: none;"
+                                            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                        <p style="font-size: 12px; color: #6b7280; margin-top: 10px;">
+                                            Accepted: PDF, DOC, DOCX, JPG, PNG (Max 5MB each)
+                                        </p>
+                                    </div>
+                                    <div id="file-list-new" class="file-list"></div>
+                                </div>
+
+                                <div style="display: flex; gap: 12px; justify-content: flex-end; flex-wrap: wrap;">
+                                    <button type="button" class="btn btn-secondary"
+                                        onclick="showSection('my-applications')">
+                                        Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-primary" onclick="saveDraft()">
+                                        Save as Draft
+                                    </button>
+                                    <button type="submit" class="btn btn-success">
+                                        Submit Application
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 3: Track Status -->
+                <section id="track-status" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Track Application Status</h3>
+                            <button class="btn btn-primary" onclick="refreshStatus()">🔄 Refresh</button>
+                        </div>
+                        <div class="card-body">
+                            <div id="status-tracking">
+                                <!-- Real-time status updates -->
+                                <div class="grid grid-2">
+                                    <div class="card"
+                                        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                                        <div class="card-body" style="border: none;">
+                                            <h3 style="color: white; margin-bottom: 8px;">Total Applications</h3>
+                                            <p style="font-size: 36px; font-weight: bold;">5</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="card"
+                                        style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                                        <div class="card-body" style="border: none;">
+                                            <h3 style="color: white; margin-bottom: 8px;">In Review</h3>
+                                            <p style="font-size: 36px; font-weight: bold;">2</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="margin-top: 24px;">
+                                    <h4 style="margin-bottom: 16px;">Recent Status Updates</h4>
+
+                                    <div class="timeline">
+                                        <div class="timeline-item">
+                                            <div class="timeline-date">January 15, 2026 - 10:30 AM</div>
+                                            <div class="timeline-content">
+                                                <strong>MIT Application</strong> moved to <span
+                                                    class="status-badge status-in-review">In Review</span>
+                                                <p style="margin-top: 8px; color: #6b7280;">Your application is being
+                                                    reviewed by the admissions committee.</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="timeline-item">
+                                            <div class="timeline-date">January 10, 2026 - 2:15 PM</div>
+                                            <div class="timeline-content">
+                                                <strong>MIT Application</strong> submitted successfully
+                                                <p style="margin-top: 8px; color: #6b7280;">All required documents
+                                                    received.</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="timeline-item">
+                                            <div class="timeline-date">January 8, 2026 - 4:45 PM</div>
+                                            <div class="timeline-content">
+                                                <strong>Oxford Application</strong> status changed to <span
+                                                    class="status-badge status-approved">Approved</span>
+                                                <p style="margin-top: 8px; color: #6b7280;">Congratulations! Your
+                                                    application has been approved.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 4: Documents Management -->
+                <section id="documents" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Upload & Manage Documents</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-label">Select Application</label>
+                                <select class="form-control" id="doc-application-select">
+                                    <option value="">Choose an application...</option>
+                                    <option value="1">Master's in Computer Science - MIT</option>
+                                    <option value="2">Credit Transfer - Stanford University</option>
+                                    <option value="3">PhD in Data Science - Oxford</option>
+                                </select>
+                            </div>
+
+                            <div class="upload-area" id="upload-area-docs">
+                                <p>📄 Drag and drop files here or click to browse</p>
+                                <input type="file" id="file-input-docs" multiple style="display: none;"
+                                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                <p style="font-size: 12px; color: #6b7280; margin-top: 10px;">
+                                    Accepted: PDF, DOC, DOCX, JPG, PNG (Max 5MB each)
+                                </p>
+                            </div>
+
+                            <div style="margin-top: 24px;">
+                                <h4 style="margin-bottom: 16px;">Uploaded Documents</h4>
+                                <div class="file-list">
+                                    <div class="file-item">
+                                        <div>
+                                            <strong>📄 Transcript.pdf</strong>
+                                            <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">
+                                                Uploaded on Jan 10, 2026 • 1.2 MB
+                                            </p>
+                                        </div>
+                                        <div style="display: flex; gap: 8px;">
+                                            <button class="btn btn-secondary"
+                                                style="padding: 6px 12px; font-size: 12px;">
+                                                View
+                                            </button>
+                                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;">
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="file-item">
+                                        <div>
+                                            <strong>📄 Recommendation_Letter.pdf</strong>
+                                            <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">
+                                                Uploaded on Jan 8, 2026 • 850 KB
+                                            </p>
+                                        </div>
+                                        <div style="display: flex; gap: 8px;">
+                                            <button class="btn btn-secondary"
+                                                style="padding: 6px 12px; font-size: 12px;">
+                                                View
+                                            </button>
+                                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;">
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="file-item">
+                                        <div>
+                                            <strong>📄 Personal_Statement.docx</strong>
+                                            <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">
+                                                Uploaded on Jan 5, 2026 • 450 KB
+                                            </p>
+                                        </div>
+                                        <div style="display: flex; gap: 8px;">
+                                            <button class="btn btn-secondary"
+                                                style="padding: 6px 12px; font-size: 12px;">
+                                                View
+                                            </button>
+                                            <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;">
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section 5: Application History -->
+                <section id="history" class="content-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Application History</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-date">January 15, 2026</div>
+                                    <div class="timeline-content">
+                                        <h4 style="margin-bottom: 8px;">Application Review Started</h4>
+                                        <p><strong>Program:</strong> Master's in Computer Science - MIT</p>
+                                        <p style="color: #6b7280; margin-top: 8px;">
+                                            The admissions committee has started reviewing your application.
+                                            You can expect a decision within 2-3 weeks.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-date">January 10, 2026</div>
+                                    <div class="timeline-content">
+                                        <h4 style="margin-bottom: 8px;">Application Submitted</h4>
+                                        <p><strong>Program:</strong> Master's in Computer Science - MIT</p>
+                                        <p style="color: #6b7280; margin-top: 8px;">
+                                            Successfully submitted application with all required documents.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-date">January 8, 2026</div>
+                                    <div class="timeline-content">
+                                        <h4 style="margin-bottom: 8px;">Application Approved ✅</h4>
+                                        <p><strong>Program:</strong> PhD in Data Science - Oxford</p>
+                                        <p style="color: #6b7280; margin-top: 8px;">
+                                            Congratulations! Your application has been approved.
+                                            You will receive an acceptance letter via email within 48 hours.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-date">January 5, 2026</div>
+                                    <div class="timeline-content">
+                                        <h4 style="margin-bottom: 8px;">Application Submitted</h4>
+                                        <p><strong>Program:</strong> Credit Transfer - Stanford University</p>
+                                        <p style="color: #6b7280; margin-top: 8px;">
+                                            Application submitted for credit transfer review.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-date">December 28, 2025</div>
+                                    <div class="timeline-content">
+                                        <h4 style="margin-bottom: 8px;">Application Submitted</h4>
+                                        <p><strong>Program:</strong> PhD in Data Science - Oxford</p>
+                                        <p style="color: #6b7280; margin-top: 8px;">
+                                            Initial application submitted with transcripts and recommendation letters.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="timeline-item">
+                                    <div class="timeline-date">December 20, 2025</div>
+                                    <div class="timeline-content">
+                                        <h4 style="margin-bottom: 8px;">Application Updated</h4>
+                                        <p><strong>Program:</strong> PhD in Data Science - Oxford</p>
+                                        <p style="color: #6b7280; margin-top: 8px;">
+                                            Updated personal statement and added research proposal.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- JavaScript for Navigation and Interactions -->
+    <script>
+        // Set username on page load
+        window.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('display-username').textContent = 'Student User';
+        });
+
+        // Navigation between sections
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all nav links
+            document.querySelectorAll('.sidebar-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked nav link
+            const navLink = document.querySelector(`[data-section="${sectionId}"]`);
+            if (navLink) {
+                navLink.classList.add('active');
+            }
+
+            // Update page title
+            const titles = {
+                'my-applications': 'My Applications',
+                'new-application': 'New Application',
+                'track-status': 'Track Status',
+                'documents': 'Documents',
+                'history': 'Application History'
+            };
+            document.getElementById('page-title').textContent = titles[sectionId];
+        }
+
+        // Add click listeners to sidebar links
+        document.querySelectorAll('.sidebar-link[data-section]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.getAttribute('data-section');
+                showSection(section);
+            });
+        });
+
+        // Form submission
+        document.getElementById('new-application-form')?.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Validate form
+            if (!this.checkValidity()) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Collect form data
+            const formData = new FormData(this);
+
+            // Show success message
+            alert('Application submitted successfully!\n\n' +
+                'In a real application, this would be sent to the server.');
+
+            // Reset form and go back to applications
+            this.reset();
+            document.getElementById('file-list-new').innerHTML = '';
+            showSection('my-applications');
+        });
+
+        // Save as draft functionality
+        function saveDraft() {
+            const form = document.getElementById('new-application-form');
+            const formData = new FormData(form);
+
+            alert('Application saved as draft!\n\n' +
+                'In a real application, this would be saved to the database.');
+        }
+
+        // File upload handling
+        function setupFileUpload(uploadAreaId, fileInputId, fileListId) {
+            const uploadArea = document.getElementById(uploadAreaId);
+            const fileInput = document.getElementById(fileInputId);
+            const fileList = document.getElementById(fileListId);
+
+            if (!uploadArea || !fileInput) return;
+
+            uploadArea.addEventListener('click', () => fileInput.click());
+
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files, fileListId);
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files, fileListId);
+            });
+        }
+
+        function handleFiles(files, fileListId) {
+            const fileList = document.getElementById(fileListId);
+            if (!fileList) return;
+
+            Array.from(files).forEach(file => {
+                // Validate file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`File ${file.name} is too large. Max size is 5MB.`);
+                    return;
+                }
+
+                // Validate file type
+                const allowedTypes = ['application/pdf', 'application/msword',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'image/jpeg', 'image/jpg', 'image/png'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert(`File ${file.name} has an invalid type. Please upload PDF, DOC, DOCX, JPG, or PNG files.`);
+                    return;
+                }
+
+                // Add file to list
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div>
+                        <strong>📄 ${file.name}</strong>
+                        <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">
+                            ${(file.size / 1024).toFixed(2)} KB
+                        </p>
+                    </div>
+                    <button class="btn btn-danger" style="padding: 6px 12px; font-size: 12px;" 
+                            onclick="this.parentElement.remove()">
+                        Remove
+                    </button>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        }
+
+        // Initialize file uploads
+        setupFileUpload('upload-area-new', 'file-input-new', 'file-list-new');
+        setupFileUpload('upload-area-docs', 'file-input-docs', 'file-list-docs');
+
+        // View application
+        function viewApplication(id) {
+            alert(`Viewing application #${id}\n\n` +
+                'In a real application, this would open a detailed view.');
+        }
+
+        // Edit application
+        function editApplication(id) {
+            alert(`Editing application #${id}\n\n` +
+                'Loading application data into form...');
+            showSection('new-application');
+        }
+
+        // Refresh status
+        function refreshStatus() {
+            alert('Refreshing status...\n\n' +
+                'In a real application, this would fetch the latest updates from the server.');
+        }
+    </script>
+</body>
+
+</html>

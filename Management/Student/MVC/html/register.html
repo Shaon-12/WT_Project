@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - StudyAbroad</title>
+    <link rel="stylesheet" href="../css/school-style.css">
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="auth-card" style="width: 500px;">
+            <h2 style="text-align: center; margin-bottom: 20px;">Register</h2>
+
+            <div id="message-container" style="display: none;"></div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab-btn active" id="tab-student">Student</div>
+                <div class="tab-btn" id="tab-university">University</div>
+            </div>
+
+            <!-- Student Registration Form -->
+            <form action="../php/register.php" method="POST" id="form-student" class="form-section active">
+                <input type="hidden" name="role" value="student">
+
+                <div class="form-group">
+                    <label class="form-label" for="student-username">Username</label>
+                    <input type="text" id="student-username" name="username" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="student-email">Email</label>
+                    <input type="email" id="student-email" name="email" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="student-password">Password</label>
+                    <input type="password" id="student-password" name="password" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="student-confirm">Confirm Password</label>
+                    <input type="password" id="student-confirm" name="confirm_password" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full">Register as Student</button>
+            </form>
+
+            <!-- University Registration Form -->
+            <form action="../php/register.php" method="POST" id="form-university" class="form-section">
+                <input type="hidden" name="role" value="university">
+
+                <div class="form-group">
+                    <label class="form-label" for="uni-username">Username</label>
+                    <input type="text" id="uni-username" name="username" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="uni-email">Email</label>
+                    <input type="email" id="uni-email" name="email" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="uni-name">University Name</label>
+                    <input type="text" id="uni-name" name="university_name" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="uni-country">Country</label>
+                    <input type="text" id="uni-country" name="university_country" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="uni-ranking">Ranking</label>
+                    <input type="number" id="uni-ranking" name="university_ranking" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="uni-password">Password</label>
+                    <input type="password" id="uni-password" name="password" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="uni-confirm">Confirm Password</label>
+                    <input type="password" id="uni-confirm" name="confirm_password" class="form-control">
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full">Register as University</button>
+            </form>
+
+            <p style="text-align: center; margin-top: 15px;">
+                Already have an account? <a href="login.html">Login here</a>
+            </p>
+
+            <p style="text-align: center; margin-top: 10px;">
+                <a href="../index.php">Back to Home</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="../js/script.js"></script>
+</body>
+
+</html>
