@@ -1,0 +1,53 @@
+[
+    {
+        "id": 1,
+        "student_id": 1,
+        "student_name": "Student User",
+        "program": "Master's in Computer Science - MIT",
+        "application_type": "Higher Studies",
+        "country": "United States",
+        "intake": "Fall 2026",
+        "submission_date": "2026-01-10",
+        "status": "in-review",
+        "gpa": "3.8/4.0",
+        "test_scores": "GRE 320",
+        "documents": [
+            "Transcript.pdf",
+            "Recommendation_Letter.pdf"
+        ]
+    },
+    {
+        "id": 2,
+        "student_id": 1,
+        "student_name": "Student User",
+        "program": "Credit Transfer - Stanford University",
+        "application_type": "Credit Transfer",
+        "country": "United States",
+        "intake": "Spring 2026",
+        "submission_date": "2026-01-05",
+        "status": "pending",
+        "gpa": "3.9/4.0",
+        "test_scores": "IELTS 7.5",
+        "documents": [
+            "Personal_Statement.docx"
+        ]
+    },
+    {
+        "id": 3,
+        "student_id": 1,
+        "student_name": "Student User",
+        "program": "PhD in Data Science - Oxford",
+        "application_type": "Higher Studies",
+        "country": "United Kingdom",
+        "intake": "Fall 2025",
+        "submission_date": "2025-12-28",
+        "status": "approved",
+        "gpa": "3.95/4.0",
+        "test_scores": "GRE 325, IELTS 8.0",
+        "documents": [
+            "Transcript.pdf",
+            "Research_Proposal.pdf",
+            "Recommendation_Letters.pdf"
+        ]
+    }
+]
